@@ -5,8 +5,8 @@
             "include": "(\\.py$)",
             "exclude": "(^phabenv/)"
         },
-        "jsonlint": {
-            "type": "jsonlint",
+        "json": {
+            "type": "json",
             "include": "(\\.json$)",
             "exclude": "(^phabenv/)"
         }

@@ -1,12 +1,12 @@
-version: '3.7'
+version: "3.7"
 services:
   webhook:
     image: phabwebhook:latest
     ports:
-        - "9000:9000"
+      - "9000:9000"
     #volumes:
-      #- ./:/var/scripts
-    environment: 
+    #- ./:/var/scripts
+    environment:
       - PHABRICATOR_URL=https://phabricator.yoursite.com/api/
       - PHABRICATOR_TOKEN=api-token
       - DISCORD_URL=https://discordapp.com/api/webhooks/blahblahblah
