@@ -1,4 +1,5 @@
 from os import environ
+import re
 
 from dhooks import Embed, Webhook
 from phabricator import Phabricator
@@ -9,7 +10,7 @@ PHABRICATOR_TOKEN = environ.get('PHABRICATOR_TOKEN')
 DISCORD_URL = environ.get('DISCORD_URL')
 PHID = environ.get('PHID')
 PHIDTYPE = environ.get('PHIDTYPE')
-PHIDTRANSACTION = environ.get('PHIDTRANSACTION')
+TRIGGER_PHID = environ.get('TRIGGER_PHID')
 
 # Initial Setup
 phab = Phabricator(host=PHABRICATOR_URL, token=PHABRICATOR_TOKEN)
@@ -25,45 +26,6 @@ if PHIDTYPE == 'CMIT':
 
 if PHIDTYPE == 'TASK':
     task_search = phab.maniphest.search(constraints={"phids": [PHID]})
-    task_transaction = phab.transaction.search(
-        objectIdentifier=f"{PHID}", constraints={"phids": [f"{PHIDTRANSACTION}"]})
-
-
-# Discord webhooks
-def discordTaskHook():
-
-    embed = Embed(
-        title=f'{Conduit.fullname()}',
-        url=f'{Conduit.url()}',
-        description=f'{Conduit.task_content()}',
-        color=0x6e5cb6,
-        timestamp='now'  # sets the timestamp to current time
-    )
-    image1 = 'https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/253_Phabricator_logo-512.png'
-    embed.set_author(name=f'{Conduit.task_author()}')
-    embed.add_field(name='Status', value=f'{Conduit.task_status()}')
-    embed.add_field(name='Priority', value=f'{Conduit.task_priority()}')
-    embed.add_field(name='Type', value=f'{Conduit.task_type()}')
-    embed.set_footer(text=f'{Conduit.typename()}')
-    embed.set_thumbnail(image1)
-    hook.send(embed=embed)
-
-
-def discordCommitHook():
-
-    embed = Embed(
-        title=f'{Conduit.repo_fullname()}',
-        url=f'{Conduit.url()}',
-        description=f'{Conduit.fullname()}',
-        color=0x6e5cb6,
-        timestamp='now'  # sets the timestamp to current time
-    )
-    image1 = 'https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/253_Phabricator_logo-512.png'
-    embed.set_author(name=f'{Conduit.repo_author()}')
-    embed.add_field(name='Status', value=f'{Conduit.status()}')
-    embed.set_footer(text=f'{Conduit.typename()}')
-    embed.set_thumbnail(image1)
-    hook.send(embed=embed)
 
 
 class Conduit:
@@ -85,6 +47,15 @@ class Conduit:
         status = webhook_query.response[PHID]['status']
         return status
 
+    def user():
+        if re.search("USER", TRIGGER_PHID):
+            author_search = phab.user.search(
+                constraints={"phids": [TRIGGER_PHID]})
+            user = author_search.response['data'][0]['fields']['username']
+        else:
+            user = 'Unknown User'
+        return user
+
     def repo_author():
         repo_author = repo_search.response['data'][0]['fields']['author']['name']
         return repo_author
@@ -97,33 +68,57 @@ class Conduit:
         repo_fullname = repo_query.response[repositoryPHID]['fullName']
         return repo_fullname
 
-    def task_author():
-        authorPHID = task_transaction.response['data'][0]['comments'][0]['authorPHID']
-        author_search = phab.user.search(
-            constraints={"phids": [f"{authorPHID}"]})
-        task_author = author_search.response['data'][0]['fields']['username']
-        return task_author
-
     def task_status():
         task_status = task_search.response['data'][0]['fields']['status']['name']
         return task_status
-
-    def task_type():
-        task_type = task_transaction.response['data'][0]['type']
-        return task_type
 
     def task_priority():
         task_priority = task_search.response['data'][0]['fields']['priority']['name']
         return task_priority
 
-    def task_content():
-        task_content = task_transaction.response['data'][0]['comments'][0]['content']['raw']
-        return task_content
+
+def main():
+    # Send message to Discord
+
+    icon = 'https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/253_Phabricator_logo-128.png'
+
+    if PHIDTYPE == 'TASK':
+        embed = Embed(
+            title=f'{Conduit.fullname()}',
+            url=f'{Conduit.url()}',
+            color=0x6e5cb6,
+            timestamp='now'
+        )
+        embed.set_author(name=f'{Conduit.user()}')
+        embed.add_field(name='Status', value=f'{Conduit.task_status()}')
+        embed.add_field(name='Priority', value=f'{Conduit.task_priority()}')
+
+    if PHIDTYPE == 'CMIT':
+        embed = Embed(
+            title=f'{Conduit.repo_fullname()}',
+            description=f'{Conduit.fullname()}',
+            url=f'{Conduit.url()}',
+            color=0x6e5cb6,
+            timestamp='now'
+        )
+        embed.set_author(name=f'{Conduit.repo_author()}')
+        embed.add_field(name='Status', value=f'{Conduit.status()}')
+
+    if PHIDTYPE == 'DREV':
+        embed = Embed(
+            title=f'{Conduit.fullname()}',
+            url=f'{Conduit.url()}',
+            color=0x6e5cb6,
+            timestamp='now'
+        )
+        embed.set_author(name=f'{Conduit.user()}')
+        embed.add_field(name='Status', value=f'{Conduit.status()}')
+
+    embed.set_footer(text=f'{Conduit.typename()}')
+    embed.set_thumbnail(icon)
+
+    hook.send(embed=embed)
 
 
-# Run webhook
-if PHIDTYPE == 'CMIT':
-    discordCommitHook()
-
-if PHIDTYPE == 'TASK':
-    discordTaskHook()
+# Run it
+main()

@@ -16,8 +16,8 @@
       },
       {
         "source": "payload",
-        "name": "transactions.0.phid",
-        "envname": "PHIDTRANSACTION"
+        "name": "triggers.0.phid",
+        "envname": "TRIGGER_PHID"
       }
     ],
     "trigger-rule": {
