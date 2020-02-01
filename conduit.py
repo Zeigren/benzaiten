@@ -53,7 +53,7 @@ class Conduit:
                 constraints={"phids": [TRIGGER_PHID]})
             user = author_search.response['data'][0]['fields']['username']
         else:
-            user = 'Unknown User'
+            user = 'Phabricator'
         return user
 
     def repo_author():
