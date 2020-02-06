@@ -34,14 +34,16 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 COPY --from=python_build $VIRTUAL_ENV $VIRTUAL_ENV
 COPY --from=go_build /usr/local/bin/webhook /usr/local/bin/webhook
-COPY conduit.py hooks.json python.sh /var/scripts/
+COPY conduit.py hooks.json python.sh dockerhub.py dockerhub.sh /var/scripts/
 
 RUN addgroup -S hookgroup && adduser -S hook -G hookgroup \
     && chown -R hook /var/scripts \
     && chown -R hook /usr/local/bin/webhook \
     && chown -R hook $VIRTUAL_ENV \
     && chmod +x /var/scripts/conduit.py \
-    && chmod +x /var/scripts/python.sh
+    && chmod +x /var/scripts/python.sh \
+    && chmod +x /var/scripts/dockerhub.py \
+    && chmod +x /var/scripts/dockerhub.sh
 
 USER hook
 

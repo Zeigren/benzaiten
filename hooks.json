@@ -21,18 +21,51 @@
       }
     ],
     "trigger-rule": {
-      "or": [
-        {
-          "match": {
-            "type": "regex",
-            "regex": ".",
-            "parameter": {
-              "source": "header",
-              "name": "X-Phabricator-Webhook-Signature"
-            }
-          }
+      "match": {
+        "type": "regex",
+        "regex": ".",
+        "parameter": {
+          "source": "header",
+          "name": "X-Phabricator-Webhook-Signature"
         }
-      ]
+      }
+    }
+  },
+  {
+    "id": "dockerhub",
+    "execute-command": "/var/scripts/dockerhub.sh",
+    "command-working-directory": "/var/scripts",
+    "pass-environment-to-command": [
+      {
+        "source": "payload",
+        "name": "repository.repo_name",
+        "envname": "DOCKERHUB_REPO_NAME"
+      },
+      {
+        "source": "payload",
+        "name": "repository.repo_url",
+        "envname": "DOCKERHUB_REPO_URL"
+      },
+      {
+        "source": "payload",
+        "name": "repository.description",
+        "envname": "DOCKERHUB_DESCRIPTION"
+      },
+      {
+        "source": "payload",
+        "name": "push_data.tag",
+        "envname": "DOCKERHUB_TAG"
+      }
+    ],
+    "trigger-rule": {
+      "match": {
+        "type": "regex",
+        "regex": ".",
+        "parameter": {
+          "source": "header",
+          "name": "x-newrelic-transaction"
+        }
+      }
     }
   }
 ]

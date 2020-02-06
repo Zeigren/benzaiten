@@ -39,3 +39,5 @@ The Docker image is Alpine based and created using a multi-stage build in order 
 [Discord webhook visualizer](https://discohook.jaylineko.com/)
 
 [Postman](https://www.getpostman.com/)
+
+[DockerHub Webhooks](https://docs.docker.com/docker-hub/webhooks/)
