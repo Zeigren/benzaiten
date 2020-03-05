@@ -1,0 +1,16 @@
+[package]
+name = "benzaiten"
+version = "0.1.0"
+authors = ["Zeigren <zeigren@zeigren.com>"]
+edition = "2018"
+description = "..."
+documentation = "bookstack.kairohm.dev"
+homepage = "kairohm.dev"
+repository = "phabricator.kairohm.dev"
+readme = "README.md"
+keywords = ["phabricator", "webhook", "discord", "bot"]
+categories = ["web-programming"]
+license = "MIT"
+
+[dependencies]
+serenity = "~0.8"

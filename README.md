@@ -1,55 +1,26 @@
-# A Webhook Relay Message Bot Thing
+# Rust HTTP
 
-This is a couple of very rough python scripts that currently parse webhooks from Phabricator and Docker Hub, it then creates a message from that information and passes it on. Currently it sends the message to a Discord webhook and saves it as a json file. When parsing the Phabricator webhook it requests more information via the Conduit API. It currently supports Diffusion Commits, Differential Revisions, and Maniphest Tasks.
+https://github.com/sbstp/attohttpc
+https://docs.rs/attohttpc/0.11.1/attohttpc/
 
-## Setup
+# Conduit
 
-### Phabricator
+https://secure.phabricator.com/book/phabricator/article/conduit/
+https://github.com/disqus/python-phabricator
 
-- Create a webhook and whatever rules to trigger it in [Phabricator](https://secure.phabricator.com/book/phabricator/article/webhooks/)
-- Set the webhook link to `http://yourserver:9000/hooks/phabricator`
-- Create a Phabricator API token for [Conduit](https://secure.phabricator.com/book/phabricator/article/conduit/)
+# Discord
 
-### Docker Hub
+Serenity is incredibly overkill to use just for Discord webhooks.
 
-- Create a webhook for your Docker Hub repository and set the webhook link to `http://yourserver:9000/hooks/dockerhub`
+https://github.com/serenity-rs/serenity
+https://docs.rs/serenity/0.8.0/serenity/model/webhook/struct.Webhook.html
+https://discordapp.com/developers/docs/intro
+https://leovoel.github.io/embed-visualizer/
 
-### Discord
-
-- Create a Discord [webhook](https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
-
-### Docker
-
-- Set a few environment variables in `docker-compose.yml` namely:
-  - `PHABRICATOR_URL` - URL for the Phabricator instance
-  - `PHABRICATOR_TOKEN` - Conduit API token
-  - `DISCORD_URL` - Discord webhook URL
-- Run `docker-compose up -d`
-
-## Theory of Operation
-
-This uses [Adnanh Webhook](https://github.com/adnanh/webhook) for incoming webhooks. It weakly/barely authenticates the webhook, parses the json body for specific info, and passes that off to the relevant python script.
-
-`phabricator.py` will query Phabricator via a [Conduit API wrapper](https://github.com/disqus/python-phabricator) for more information and bundle that into a message.
-
-`dockerhub.py` takes the Docker Hub information and bundles it into a message.
-
-`webactivity.py` is used to save messages to json files.
-
-Discord notifications are sent using a [Discord webhook API wrapper](https://github.com/kyb3r/dhooks).
-
-## Docker Image
-
-The Docker image is Alpine based and created using a multi-stage build in order to minimize its size. The Docker image is based on the one by [almir](https://github.com/almir/docker-webhook).
-
-## Resources
-
-The webhook examples folder has some well examples of different webhooks to use for testing.
-
-[Webhook test site](https://github.com/fredsted/webhook.site)
-
-[Discord webhook visualizer](https://discohook.jaylineko.com/)
-
-[Postman](https://www.getpostman.com/)
-
-[DockerHub Webhooks](https://docs.docker.com/docker-hub/webhooks/)
+# Matrix
+https://github.com/ruma/ruma-api
+https://github.com/eeeeeta/glitch-in-the-matrix
+https://github.com/danigm/fractal
+https://github.com/Half-Shot/matrix-appservice-discord
+https://matrix.org/docs/spec/
+https://github.com/zwieberl/matrix_bot_api
