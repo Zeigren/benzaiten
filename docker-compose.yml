@@ -1,11 +1,11 @@
 version: "3.7"
 services:
   webhook:
-    image: phabwebhook:latest
+    image: benzaiten:latest
     ports:
       - "9000:9000"
-    #volumes:
-    #- ./:/var/scripts
+    volumes:
+    - data:/var/scripts/data
     environment:
       - PHABRICATOR_URL=https://phabricator.yoursite.com/api/
       - PHABRICATOR_TOKEN=api-token

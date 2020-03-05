@@ -20,10 +20,11 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN apk add --update --no-cache gcc musl-dev
 
+COPY requirements.txt requirements.txt
+
 RUN python -m venv $VIRTUAL_ENV \
     && pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir phabricator dhooks
-
+    && pip install --no-cache-dir -r requirements.txt
 
 FROM python:alpine
 
@@ -34,19 +35,14 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 COPY --from=python_build $VIRTUAL_ENV $VIRTUAL_ENV
 COPY --from=go_build /usr/local/bin/webhook /usr/local/bin/webhook
-COPY conduit.py hooks.json python.sh dockerhub.py dockerhub.sh /var/scripts/
+COPY /benzaiten /var/scripts/
 
-RUN addgroup -S hookgroup && adduser -S hook -G hookgroup \
-    && chown -R hook /var/scripts \
-    && chown -R hook /usr/local/bin/webhook \
-    && chown -R hook $VIRTUAL_ENV \
-    && chmod +x /var/scripts/conduit.py \
-    && chmod +x /var/scripts/python.sh \
+RUN chmod +x /var/scripts/conduit.py \
     && chmod +x /var/scripts/dockerhub.py \
+    && chmod +x /var/scripts/webactivity.py \
+    && chmod +x /var/scripts/phabricator.sh \
     && chmod +x /var/scripts/dockerhub.sh
-
-USER hook
-
+    
 EXPOSE 9000
 
 CMD [ "/usr/local/bin/webhook", "-verbose", "-hooks=/var/scripts/hooks.json", "-hotreload" ]

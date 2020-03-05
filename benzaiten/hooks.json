@@ -1,7 +1,7 @@
 [
   {
-    "id": "discord",
-    "execute-command": "/var/scripts/python.sh",
+    "id": "phabricator",
+    "execute-command": "/var/scripts/phabricator.sh",
     "command-working-directory": "/var/scripts",
     "pass-environment-to-command": [
       {
