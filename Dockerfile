@@ -1,6 +1,6 @@
 FROM golang:alpine AS go_build
 WORKDIR /go/src/github.com/adnanh/webhook
-ENV WEBHOOK_VERSION 2.6.11
+ENV WEBHOOK_VERSION 2.7.0
 RUN apk add --update -t build-deps curl libc-dev gcc libgcc
 RUN curl -L --silent -o webhook.tar.gz https://github.com/adnanh/webhook/archive/${WEBHOOK_VERSION}.tar.gz && \
     tar -xzf webhook.tar.gz --strip 1 &&  \
@@ -9,7 +9,6 @@ RUN curl -L --silent -o webhook.tar.gz https://github.com/adnanh/webhook/archive
     apk del --purge build-deps && \
     rm -rf /var/cache/apk/* && \
     rm -rf /go
-
 
 FROM python:alpine AS python_build
 
