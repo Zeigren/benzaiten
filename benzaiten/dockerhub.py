@@ -5,6 +5,7 @@ from dhooks import Embed, Webhook
 from webactivity import activityClean, activitySave
 
 DISCORD_URL = environ.get("DISCORD_URL")
+DISCORD_ENABLE = environ.get("DISCORD_ENABLE")
 DOCKERHUB_REPO_NAME = environ.get("DOCKERHUB_REPO_NAME")
 DOCKERHUB_REPO_URL = environ.get("DOCKERHUB_REPO_URL")
 DOCKERHUB_DESCRIPTION = environ.get("DOCKERHUB_DESCRIPTION")
@@ -30,7 +31,8 @@ def main():
 
     embed.set_thumbnail(icon)
 
-    hook.send(embed=embed)
+    if DISCORD_ENABLE:
+        hook.send(embed=embed)
 
     # Save to json for website
     activity = embed.to_dict()

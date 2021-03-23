@@ -44,7 +44,7 @@ The Docker image is Alpine based and created using a multi-stage build in order 
 
 ## Resources
 
-The webhook examples folder has some well examples of different webhooks to use for testing.
+The webhook examples folder has some examples of different webhooks to use for testing.
 
 [Webhook test site](https://github.com/fredsted/webhook.site)
 

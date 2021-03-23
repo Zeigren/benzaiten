@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   webhook:
-    image: benzaiten:latest
+    image: zeigren/benzaiten:latest
     ports:
       - "9000:9000"
     volumes:
@@ -10,3 +10,4 @@ services:
       - PHABRICATOR_URL=https://phabricator.yoursite.com/api/
       - PHABRICATOR_TOKEN=api-token
       - DISCORD_URL=https://discordapp.com/api/webhooks/blahblahblah
+      - DISCORD_ENABLE=true

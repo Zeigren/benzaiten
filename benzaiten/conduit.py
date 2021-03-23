@@ -10,6 +10,7 @@ from webactivity import activityClean, activitySave
 PHABRICATOR_URL = environ.get("PHABRICATOR_URL")
 PHABRICATOR_TOKEN = environ.get("PHABRICATOR_TOKEN")
 DISCORD_URL = environ.get("DISCORD_URL")
+DISCORD_ENABLE = environ.get("DISCORD_ENABLE")
 PHID = environ.get("PHID")
 PHIDTYPE = environ.get("PHIDTYPE")
 TRIGGER_PHID = environ.get("TRIGGER_PHID")
@@ -118,7 +119,8 @@ def main():
     embed.set_footer(text=f"{Conduit.typename()}")
     embed.set_thumbnail(icon)
 
-    hook.send(embed=embed)
+    if DISCORD_ENABLE:
+        hook.send(embed=embed)
 
     # Save to json for website
     activity = embed.to_dict()
