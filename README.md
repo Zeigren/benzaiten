@@ -48,7 +48,7 @@ The webhook examples folder has some examples of different webhooks to use for t
 
 [Webhook test site](https://github.com/fredsted/webhook.site)
 
-[Discord webhook visualizer](https://discohook.jaylineko.com/)
+[Discord webhook visualizer](https://discohook.org/)
 
 [Postman](https://www.getpostman.com/)
 
